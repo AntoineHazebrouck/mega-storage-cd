@@ -1,0 +1,31 @@
+package antoine.mega_storage_cd.views.home;
+
+import antoine.mega_storage_cd.services.mixins.CdsRepositoryMixin;
+import antoine.mega_storage_cd.views.home.components.CdForm;
+import antoine.mega_storage_cd.views.home.components.CdsGrid;
+import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.Route;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Route("")
+public class HomeView
+    extends Composite<VerticalLayout>
+    implements CdsRepositoryMixin {
+
+    @Override
+    protected VerticalLayout initContent() {
+        CdsGrid grid = new CdsGrid();
+
+        return new VerticalLayout(
+            new H1("Mega Storage CD"),
+            new CdForm(cd -> {
+                saveCd(cd);
+                grid.refreshItems();
+            }),
+            grid
+        );
+    }
+}
