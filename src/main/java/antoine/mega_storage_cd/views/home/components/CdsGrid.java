@@ -6,11 +6,15 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridSortOrder;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
+import com.vaadin.flow.component.textfield.TextField;
+import java.util.stream.Stream;
 import lombok.val;
 
 public class CdsGrid extends Composite<Grid<Cd>> implements CdsRepositoryMixin {
 
     Grid<Cd> grid = new Grid<>(Cd.class, false);
+    GridListDataView<Cd> dataView = refreshItems();
 
     @Override
     protected Grid<Cd> initContent() {
@@ -34,7 +38,26 @@ public class CdsGrid extends Composite<Grid<Cd>> implements CdsRepositoryMixin {
         return grid;
     }
 
-    public void refreshItems() {
-        grid.setItems(findAllCds());
+    public GridListDataView<Cd> refreshItems() {
+        return grid.setItems(findAllCds());
+    }
+
+    public void addSearchFilter(TextField filter) {
+        filter.addValueChangeListener(event -> {
+            if (event.getValue().isBlank()) dataView.removeFilters();
+            else {
+                dataView.removeFilters();
+                dataView.addFilter(cd ->
+                    Stream.of(
+                        cd.getPosition(),
+                        cd.getAlbum(),
+                        cd.getArtist()
+                    ).anyMatch(field -> {
+                        val ok = field.toString().contains(event.getValue());
+                        return ok;
+                    })
+                );
+            }
+        });
     }
 }

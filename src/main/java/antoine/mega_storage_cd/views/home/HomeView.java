@@ -6,8 +6,10 @@ import antoine.mega_storage_cd.views.home.components.CdsGrid;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @RequiredArgsConstructor
 @Route("")
@@ -19,12 +21,16 @@ public class HomeView
     protected VerticalLayout initContent() {
         CdsGrid grid = new CdsGrid();
 
+        val search = new TextField("Search for something");
+        grid.addSearchFilter(search);
+
         return new VerticalLayout(
             new H1("Mega Storage CD"),
             new CdForm(cd -> {
                 saveCd(cd);
                 grid.refreshItems();
             }),
+            search,
             grid
         );
     }

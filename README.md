@@ -7,3 +7,9 @@ Allows me to keep track of my CDs inside my Sony CDP-CX355 CD player.
 Storage is done with json files.
 
 Cds -> ./cds.json
+
+## TODO
+
+search bar
+random proposition
+search by genre
