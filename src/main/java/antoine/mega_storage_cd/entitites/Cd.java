@@ -1,6 +1,7 @@
 package antoine.mega_storage_cd.entitites;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import lombok.Data;
 
 @Data
@@ -14,4 +15,7 @@ public class Cd {
 
     @JsonProperty("album")
     private String album;
+
+    @JsonProperty("genres")
+    private List<String> genres;
 }

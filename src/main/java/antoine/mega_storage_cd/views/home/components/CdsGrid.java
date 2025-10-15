@@ -8,6 +8,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.textfield.TextField;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.val;
 
@@ -24,6 +25,11 @@ public class CdsGrid extends Composite<Grid<Cd>> implements CdsRepositoryMixin {
             .setHeader("Position");
         grid.addColumn(Cd::getArtist).setSortable(true).setHeader("Artist");
         grid.addColumn(Cd::getAlbum).setSortable(true).setHeader("Album");
+        grid
+            .addColumn(cd ->
+                cd.getGenres().stream().collect(Collectors.joining(","))
+            )
+            .setHeader("Genres");
 
         grid.addComponentColumn(cd ->
             new Button("Delete", event -> {
@@ -48,10 +54,13 @@ public class CdsGrid extends Composite<Grid<Cd>> implements CdsRepositoryMixin {
             else {
                 dataView.removeFilters();
                 dataView.addFilter(cd ->
-                    Stream.of(
-                        cd.getPosition(),
-                        cd.getAlbum(),
-                        cd.getArtist()
+                    Stream.concat(
+                        Stream.of(
+                            cd.getPosition(),
+                            cd.getAlbum(),
+                            cd.getArtist()
+                        ),
+                        cd.getGenres().stream()
                     ).anyMatch(field -> {
                         val ok = field.toString().contains(event.getValue());
                         return ok;

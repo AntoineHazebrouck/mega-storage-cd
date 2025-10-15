@@ -7,7 +7,9 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
+import java.util.Collections;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -18,6 +20,7 @@ public class CdForm extends Composite<VerticalLayout> {
     IntegerField position = new IntegerField("Position");
     TextField artist = new TextField("Artist");
     TextField album = new TextField("Album");
+    TextField genres = new TextField("Genres");
 
     @Override
     protected VerticalLayout initContent() {
@@ -32,6 +35,11 @@ public class CdForm extends Composite<VerticalLayout> {
                 newCd.setPosition(position.getValue());
                 newCd.setArtist(artist.getValue());
                 newCd.setAlbum(album.getValue());
+                newCd.setGenres(
+                    genres.getValue().isBlank()
+                        ? Collections.emptyList()
+                        : Stream.of(genres.getValue().split(",")).toList()
+                );
 
                 callback.accept(newCd);
 
@@ -39,10 +47,11 @@ public class CdForm extends Composite<VerticalLayout> {
                 position.clear();
                 artist.clear();
                 album.clear();
+                genres.clear();
             }
         });
 
-        row.add(position, artist, album);
+        row.add(position, artist, album, genres);
         row.setAutoResponsive(true);
         row.setAutoRows(true);
         return new VerticalLayout(row, addButton);
